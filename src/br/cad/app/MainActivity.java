@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity {
@@ -33,22 +31,12 @@ public class MainActivity extends FragmentActivity {
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+			View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+						
 			
-			Button btnEnter = (Button) rootView.findViewById(R.id.btnEnter);
-			
-			btnEnter.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					msg(getActivity(), ((EditText) rootView.findViewById(R.id.txtUser)).getText().toString());
-				}
-			});
 			
 			return rootView;
 		}
-		
-		
 	}
 	
 	public static void msg(Activity activity, String msg) {
