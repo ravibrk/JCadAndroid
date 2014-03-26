@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Centro Acadêmico Digital</string>
+    <string name="lbl_none"></string>
+    <string name="login_txt_user">Usuário</string>
+    <string name="login_pwd_password">Senha</string>
+    <string name="login_btn_enter">Entrar</string>
+
+</resources>
