@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Login</title>
+	<link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
+	<link type="text/css" rel="stylesheet" href="css/login.css" />
+	
+	<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+	<script type="text/javascript">
+		function showAndroidToast() {
+			alert('oi');
+			
+			login.setUser($('#user').val());
+			login.setPassword($('#password').val());
+			login.loggin();
+		}
+	</script>
+</head>
+<body>
+	<div class="container" id="login-block">
+		<div class="row">
+			<div class="col-sm-6 col-md-4 col-sm-offset-3 col-md-offset-4">
+				<div class="login-box clearfix animated flipInY">
+					<div class="page-icon animated bounceInDown">
+						<img class="img-responsive" src="img/login-key-icon.png" alt="Key icon"></img>
+					</div>
+					<div class="login-logo">
+						<a href="#"> 
+							<img src="img/login-logo.png" alt="Company Logo"></img>
+						</a>
+					</div>
+					<hr />
+
+					<div class="login-form">
+						<form>
+							<input type="text" placeholder="User name" class="input-field" id="user" />
+							<input type="password" placeholder="Password" class="input-field" id="password" />
+							
+							<button type="button" class="btn btn-login" onclick="showAndroidToast()">Entrar</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

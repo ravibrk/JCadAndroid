@@ -2,9 +2,25 @@
 <resources>
 
     <string name="app_name">Centro Acadêmico Digital</string>
+    <string name="activity_home">Home</string>
     <string name="lbl_none"></string>
     <string name="login_txt_user">Usuário</string>
     <string name="login_pwd_password">Senha</string>
     <string name="login_btn_enter">Entrar</string>
+    
+    <string-array name="planets_array">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+    <string name="action_websearch">Web search</string>
+    <string name="app_not_available">Sorry, there\'s no web browser available</string>
 
 </resources>
