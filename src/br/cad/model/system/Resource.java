@@ -1,9 +1,9 @@
 package br.cad.model.system;
 
+import br.cad.model.ModelEntity;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-
-import br.cad.model.ModelEntity;
 
 @DatabaseTable
 public class Resource extends ModelEntity {

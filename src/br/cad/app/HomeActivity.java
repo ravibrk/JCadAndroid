@@ -1,10 +1,11 @@
 package br.cad.app;
 
+import java.sql.SQLException;
 import java.util.Locale;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.OrmLiteDao;
 
+import ormlite.android.apptools.OrmLiteBaseActivity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
@@ -22,12 +23,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import br.cad.dao.sqlite.DatabaseHelper;
-import br.cad.dao.system.sqlite.ResourceDaoSqlite;
-
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
+import br.cad.dao.system.ResourceDao;
+import br.cad.model.system.Resource;
 
 @EActivity
-public class HomeActivity extends OrmLiteBaseActivity<DatabaseHelper> {
+public class HomeActivity extends OrmLiteBaseActivity<Resource, ResourceDao, DatabaseHelper> {
 
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -37,15 +37,18 @@ public class HomeActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 	private CharSequence mTitle;
 	private String[] mPlanetTitles;
 	
-	@OrmLiteDao(helper = DatabaseHelper.class, model = ResourceDaoSqlite.class)
-	ResourceDaoSqlite resourceDao;
+	ResourceDao resourceDao;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		
-		resourceDao.findAll();
+		try {
+			resourceDao = (ResourceDao) getHelper().getDaoImpl(Resource.class);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		mTitle = mDrawerTitle = getTitle();
 		mPlanetTitles = getResources().getStringArray(R.array.planets_array);
