@@ -1,5 +1,8 @@
 package br.cad.app;
 
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -13,7 +16,11 @@ import br.cad.util.Utils;
  * @author William Rodrigues
  * 
  */
+@EActivity()
 public class LoginActivity extends Activity {
+	
+	@ViewById(R.id.webview_login)
+	WebView webLogin;
 
 	@Override
 	@SuppressLint("SetJavaScriptEnabled")
@@ -21,11 +28,14 @@ public class LoginActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		WebView webLogin = (WebView) findViewById(R.id.webview_login);
 		webLogin.getSettings().setJavaScriptEnabled(true);
 		webLogin.addJavascriptInterface(new LoginInterface(this), "login");
 
 		webLogin.loadUrl("file:///android_asset/www/login.html");
+	}
+	
+	void onClose() {
+		finish();
 	}
 
 	public class LoginInterface {
@@ -62,7 +72,9 @@ public class LoginActivity extends Activity {
 		public void loggin() {
 			// FIXME: implementar logica do login
 //			if(user.equals("williamrodrigues") && password.equals("123456")) {
-				Utils.startActivity(LoginActivity.this, HomeActivity.class);
+				onClose();
+			
+				Utils.startActivity(LoginActivity.this, TesteActivity_.class);
 //			}
 //			else {
 //				Utils.msg(LoginActivity.this, "Usuário ou senha invalidos!");

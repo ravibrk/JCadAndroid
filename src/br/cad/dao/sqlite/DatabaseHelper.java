@@ -2,19 +2,19 @@ package br.cad.dao.sqlite;
 
 import java.sql.SQLException;
 
-import ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import br.cad.model.Model;
+import br.cad.dao.system.ResourceDao;
+import br.cad.dao.system.sqlite.ResourceDaoSqLite;
 import br.cad.model.system.Resource;
 
-import com.j256.ormlite.dao.BaseDaoImpl;
+import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 /**
- * Helper class which creates/updates our database and provides the DAOs.
+ * Helper class which creates/updates our database.
  * 
  * @author WilliamRodrigues
  */
@@ -23,9 +23,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private static final String DATABASE_NAME = "controlacademic.db";
 	private static final int DATABASE_VERSION = 1;
 	private final String LOG_NAME = getClass().getName();
-
-	private BaseDaoImpl<? extends Model, Long> daoImpl;
-
+	
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -34,6 +32,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
 		try {
 			TableUtils.createTable(connectionSource, Resource.class);
+			
+			Resource resource =  new Resource();
+			resource.setName("Home");
+			resource.setObjectClass("Resource");
+			resource.setControllerActivity("HomeActivity");
+			
+			ResourceDao resourceDao = new ResourceDaoSqLite(getConnectionSource());
+			resourceDao.save(resource);
+			
 		} catch (SQLException e) {
 			Log.e(LOG_NAME, "Could not create new table for Thing", e);
 		}
@@ -47,13 +54,5 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		} catch (SQLException e) {
 			Log.e(LOG_NAME, "Could not upgrade the table for Thing", e);
 		}
-	}
-
-	public Object getDaoImpl(Class<? extends Model> model) throws SQLException {
-		if (daoImpl == null) {
-			daoImpl = getDao(model);
-		}
-		
-		return daoImpl;
 	}
 }

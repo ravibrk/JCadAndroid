@@ -8,8 +8,10 @@ import br.cad.dao.Dao;
 import br.cad.model.Model;
 
 import com.j256.ormlite.dao.BaseDaoImpl;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.support.ConnectionSource;
 
-public abstract class AbstractDaoSqLite<MODEL extends Model> extends BaseDaoImpl<MODEL, Long> implements Dao<MODEL> {
+public abstract class AbstractDaoSqLite<MODEL extends Model> implements Dao<MODEL> {
 	
 	/*
 	 * *****************************************************************************************************************
@@ -18,8 +20,8 @@ public abstract class AbstractDaoSqLite<MODEL extends Model> extends BaseDaoImpl
 	 */
 
 	private final String LOG_TAG = getClass().getSimpleName();
-	protected String modelClassName;
 	protected String edPackageModel;
+	private BaseDaoImpl<MODEL, Long> daoImpl;
 
 	/*
 	 * *****************************************************************************************************************
@@ -27,8 +29,15 @@ public abstract class AbstractDaoSqLite<MODEL extends Model> extends BaseDaoImpl
 	 * *****************************************************************************************************************
 	 */
 	
-	protected AbstractDaoSqLite(Class<MODEL> dataClass) throws SQLException {
-		super(dataClass);
+	@SuppressWarnings("unchecked")
+	protected AbstractDaoSqLite(ConnectionSource connectionSource, String edPackageModel) {
+		super();
+		this.edPackageModel = edPackageModel;
+		try {
+			this.daoImpl = (BaseDaoImpl<MODEL, Long>) DaoManager.createDao(connectionSource, getNewModel().getClass());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 		
 	/*
@@ -45,10 +54,6 @@ public abstract class AbstractDaoSqLite<MODEL extends Model> extends BaseDaoImpl
 		return null;
 	}
 
-	public void setModelClassName(String modelClassName) {
-		this.modelClassName = modelClassName;
-	}
-
 	public String getEdPackageModel() {
 		return edPackageModel;
 	}
@@ -61,11 +66,15 @@ public abstract class AbstractDaoSqLite<MODEL extends Model> extends BaseDaoImpl
 	@SuppressWarnings("unchecked")
 	public MODEL getNewModel() {
 		try {
-			String className = getEdPackageModel() + getModelClassName();
+			String className = getEdPackageModel() + "." + getModelClassName();
 			return (MODEL) Class.forName(className).newInstance();
 		} catch (Exception e) {
 			throw new RuntimeException();
 		}
+	}
+	
+	public BaseDaoImpl<MODEL, Long> getDaoImpl() {
+		return daoImpl;
 	}
 
 	/*
@@ -78,10 +87,10 @@ public abstract class AbstractDaoSqLite<MODEL extends Model> extends BaseDaoImpl
 	public Integer save(MODEL model) {
 		try {
 			if(model.getId() == null) {
-				return create(model);
+				return daoImpl.create(model);
 			}
 			else {
-				return update(model);
+				return daoImpl.update(model);
 			}
 		} 
 		catch (SQLException e) {
@@ -96,7 +105,7 @@ public abstract class AbstractDaoSqLite<MODEL extends Model> extends BaseDaoImpl
 	@Override
 	public void remove(MODEL model) {
 		try {
-			Log.i(LOG_TAG, "Objeto " + modelClassName + " removido ID: " + delete(model));
+			Log.i(LOG_TAG, "Objeto " + getModelClassName() + " removido ID: " + daoImpl.delete(model));
 		} catch (SQLException e) {
 			Log.d(LOG_TAG, "Erro ao remover objeto.");
 			
@@ -107,7 +116,7 @@ public abstract class AbstractDaoSqLite<MODEL extends Model> extends BaseDaoImpl
 	@Override
 	public MODEL find(String nameColumn, String value) {
 		try {
-			return queryForEq(nameColumn, value).get(0);
+			return daoImpl.queryForEq(nameColumn, value).get(0);
 		} 
 		catch (SQLException e) {
 			Log.d(LOG_TAG, "Erro ao buscar por propriedade.");
@@ -121,7 +130,7 @@ public abstract class AbstractDaoSqLite<MODEL extends Model> extends BaseDaoImpl
 	@Override
 	public MODEL find(Long id) {
 		try {
-			return queryForId(id);
+			return daoImpl.queryForId(id);
 		} 
 		catch (SQLException e) {
 			Log.d(LOG_TAG, "Erro ao buscar por ID.");
@@ -135,7 +144,7 @@ public abstract class AbstractDaoSqLite<MODEL extends Model> extends BaseDaoImpl
 	@Override
 	public List<MODEL> findAll() {
 		try {
-			return queryForAll();
+			return daoImpl.queryForAll();
 		} 
 		catch (SQLException e) {
 			Log.d(LOG_TAG, "Erro ao buscar todos os objetos");
@@ -149,7 +158,7 @@ public abstract class AbstractDaoSqLite<MODEL extends Model> extends BaseDaoImpl
 	@Override
 	public List<MODEL> findAll(String nameColumn, String value) {
 		try {
-			return queryForEq(nameColumn, value);
+			return daoImpl.queryForEq(nameColumn, value);
 		} 
 		catch (SQLException e) {
 			Log.d(LOG_TAG, "Erro ao buscar por propriedade.");

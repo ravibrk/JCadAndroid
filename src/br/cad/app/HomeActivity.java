@@ -1,11 +1,7 @@
 package br.cad.app;
 
-import java.sql.SQLException;
 import java.util.Locale;
 
-import org.androidannotations.annotations.EActivity;
-
-import ormlite.android.apptools.OrmLiteBaseActivity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.res.Configuration;
@@ -24,11 +20,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import br.cad.dao.sqlite.DatabaseHelper;
 import br.cad.dao.system.ResourceDao;
+import br.cad.dao.system.sqlite.ResourceDaoSqLite;
 import br.cad.model.system.Resource;
 
-@EActivity
-public class HomeActivity extends OrmLiteBaseActivity<Resource, ResourceDao, DatabaseHelper> {
+import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
+public class HomeActivity extends OrmLiteBaseActivity<DatabaseHelper> {
+
+	private final String LOG_NAME = getClass().getName();
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
@@ -44,10 +43,10 @@ public class HomeActivity extends OrmLiteBaseActivity<Resource, ResourceDao, Dat
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		
-		try {
-			resourceDao = (ResourceDao) getHelper().getDaoImpl(Resource.class);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		resourceDao = new ResourceDaoSqLite(getConnectionSource());
+		
+		for(Resource r : resourceDao.findAll()){
+			Log.i(LOG_NAME, r.getName());
 		}
 
 		mTitle = mDrawerTitle = getTitle();

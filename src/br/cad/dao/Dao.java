@@ -4,7 +4,7 @@ import java.util.List;
 
 import br.cad.model.Model;
 
-public interface Dao<MODEL extends Model> extends com.j256.ormlite.dao.Dao<MODEL, Long> {
+public interface Dao<MODEL extends Model> {
 	
 	/**
 	 * Criar Novo Mode para tipo proprio

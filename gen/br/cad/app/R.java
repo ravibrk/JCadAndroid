@@ -1006,6 +1006,7 @@ containing a value of this type.
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
+        public static final int button1=0x7f050040;
         public static final int checkbox=0x7f05002d;
         public static final int collapseActionView=0x7f05000d;
         public static final int content_frame=0x7f05003d;
@@ -1108,9 +1109,10 @@ containing a value of this type.
         public static final int abc_search_view=0x7f030016;
         public static final int activity_home=0x7f030017;
         public static final int activity_login=0x7f030018;
-        public static final int drawer_list_item=0x7f030019;
-        public static final int fragment_planet=0x7f03001a;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001b;
+        public static final int activity_teste=0x7f030019;
+        public static final int drawer_list_item=0x7f03001a;
+        public static final int fragment_planet=0x7f03001b;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001c;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
