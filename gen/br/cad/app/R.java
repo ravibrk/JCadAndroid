@@ -1021,9 +1021,11 @@ containing a value of this type.
         public static final int expanded_menu=0x7f05002c;
         public static final int home=0x7f050014;
         public static final int homeAsUp=0x7f050005;
+        public static final int home_lblName=0x7f050042;
         public static final int icon=0x7f05002a;
         public static final int ifRoom=0x7f05000a;
         public static final int image=0x7f050027;
+        public static final int lbl_home_resource=0x7f050041;
         public static final int left_drawer=0x7f05003e;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050029;
@@ -1111,7 +1113,7 @@ containing a value of this type.
         public static final int activity_login=0x7f030018;
         public static final int activity_teste=0x7f030019;
         public static final int drawer_list_item=0x7f03001a;
-        public static final int fragment_planet=0x7f03001b;
+        public static final int fragment_home=0x7f03001b;
         public static final int support_simple_spinner_dropdown_item=0x7f03001c;
     }
     public static final class string {

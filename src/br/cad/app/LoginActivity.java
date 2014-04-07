@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import br.cad.util.Utils;
@@ -16,9 +17,9 @@ import br.cad.util.Utils;
  * @author William Rodrigues
  * 
  */
-@EActivity()
+@EActivity
 public class LoginActivity extends Activity {
-	
+
 	@ViewById(R.id.webview_login)
 	WebView webLogin;
 
@@ -26,6 +27,15 @@ public class LoginActivity extends Activity {
 	@SuppressLint("SetJavaScriptEnabled")
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		getWindow().getDecorView().setSystemUiVisibility(
+		          View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+		        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+		        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+		        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+		        | View.SYSTEM_UI_FLAG_FULLSCREEN
+		        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+
 		setContentView(R.layout.activity_login);
 
 		webLogin.getSettings().setJavaScriptEnabled(true);
@@ -33,17 +43,17 @@ public class LoginActivity extends Activity {
 
 		webLogin.loadUrl("file:///android_asset/www/login.html");
 	}
-	
+
 	void onClose() {
 		finish();
 	}
 
 	public class LoginInterface {
 		Context mContext;
-		
+
 		private String user;
 		private String password;
-		
+
 		LoginInterface(Context c) {
 			mContext = c;
 		}
@@ -57,7 +67,7 @@ public class LoginActivity extends Activity {
 		public void setUser(String user) {
 			this.user = user;
 		}
-		
+
 		@JavascriptInterface
 		public String getPassword() {
 			return password;
@@ -67,18 +77,18 @@ public class LoginActivity extends Activity {
 		public void setPassword(String password) {
 			this.password = password;
 		}
-		
+
 		@JavascriptInterface
 		public void loggin() {
 			// FIXME: implementar logica do login
-//			if(user.equals("williamrodrigues") && password.equals("123456")) {
-				onClose();
-			
-				Utils.startActivity(LoginActivity.this, TesteActivity_.class);
-//			}
-//			else {
-//				Utils.msg(LoginActivity.this, "Usuário ou senha invalidos!");
-//			}
+			// if(user.equals("williamrodrigues") && password.equals("123456")) {
+			onClose();
+
+			Utils.startActivity(LoginActivity.this, HomeActivity_.class);
+			// }
+			// else {
+			// Utils.msg(LoginActivity.this, "Usuário ou senha invalidos!");
+			// }
 		}
 	}
 }

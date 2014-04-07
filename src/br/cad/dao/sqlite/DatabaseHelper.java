@@ -5,8 +5,6 @@ import java.sql.SQLException;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import br.cad.dao.system.ResourceDao;
-import br.cad.dao.system.sqlite.ResourceDaoSqLite;
 import br.cad.model.system.Resource;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -33,15 +31,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		try {
 			TableUtils.createTable(connectionSource, Resource.class);
 			
-			Resource resource =  new Resource();
-			resource.setName("Home");
-			resource.setObjectClass("Resource");
-			resource.setControllerActivity("HomeActivity");
+			sqLiteDatabase.execSQL("INSERT INTO Resource (name, controllerActivity, objectClass, icon) VALUES ('Home', 'HomeActivity_', 'Resource', '')");
+			sqLiteDatabase.execSQL("INSERT INTO Resource (name, controllerActivity, objectClass, icon) VALUES ('Chamada', 'HomeActivity_', 'Resource', '')");
 			
-			ResourceDao resourceDao = new ResourceDaoSqLite(getConnectionSource());
-			resourceDao.save(resource);
-			
-		} catch (SQLException e) {
+		} 
+		catch (SQLException e) {
 			Log.e(LOG_NAME, "Could not create new table for Thing", e);
 		}
 	}

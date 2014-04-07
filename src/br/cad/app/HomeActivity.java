@@ -1,9 +1,12 @@
 package br.cad.app;
 
-import java.util.Locale;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OrmLiteDao;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -16,16 +19,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import br.cad.dao.sqlite.DatabaseHelper;
 import br.cad.dao.system.ResourceDao;
 import br.cad.dao.system.sqlite.ResourceDaoSqLite;
 import br.cad.model.system.Resource;
 
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
+import com.j256.ormlite.dao.Dao;
 
-public class HomeActivity extends OrmLiteBaseActivity<DatabaseHelper> {
+@EActivity
+public class HomeActivity extends Activity {
 
 	private final String LOG_NAME = getClass().getName();
 	private DrawerLayout mDrawerLayout;
@@ -34,31 +38,38 @@ public class HomeActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 
 	private CharSequence mDrawerTitle;
 	private CharSequence mTitle;
-	private String[] mPlanetTitles;
-	
-	ResourceDao resourceDao;
+
+	private DrawerItemClickListener listApapter;
+
+	@OrmLiteDao(helper = DatabaseHelper.class, model = Resource.class)
+	Dao<Resource, Long> resourceDao;
+
+	private ResourceDao getResourceDao() {
+		return new ResourceDaoSqLite(resourceDao.getConnectionSource());
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		
-		resourceDao = new ResourceDaoSqLite(getConnectionSource());
-		
-		for(Resource r : resourceDao.findAll()){
+		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+		for (Resource r : getResourceDao().findAll()) {
 			Log.i(LOG_NAME, r.getName());
 		}
 
 		mTitle = mDrawerTitle = getTitle();
-		mPlanetTitles = getResources().getStringArray(R.array.planets_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
 		// set a custom shadow that overlays the main content when the drawer opens
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-		// set up the drawer's list view with items and click listener
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mPlanetTitles));
-		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+		listApapter = new DrawerItemClickListener(this);
+		findResources();
+		mDrawerList.setAdapter(listApapter);
+		mDrawerList.setOnItemClickListener(listApapter);
 
 		// enable ActionBar app icon to behave as action to toggle nav drawer
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -90,23 +101,64 @@ public class HomeActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 	}
 
 	@Override
+	public void onWindowFocusChanged(boolean hasFocus) {
+		super.onWindowFocusChanged(hasFocus);
+		
+		if(hasFocus) {
+			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
+		}
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// The action bar home/up action should open or close the drawer.
 		// ActionBarDrawerToggle will take care of this.
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-		
+
 		return super.onOptionsItemSelected(item);
 	}
 
 	/* The click listner for ListView in the navigation drawer */
-	private class DrawerItemClickListener implements ListView.OnItemClickListener {
+	private class DrawerItemClickListener extends ArrayAdapter<Resource> implements ListView.OnItemClickListener {
+		private Context context;
+
+		public DrawerItemClickListener(Context context) {
+			super(context, R.layout.drawer_list_item);
+			this.context = context;
+		}
+
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			Log.i("POSITION", position + "");
-			
+			Resource obj = getItem(position);
+			Log.i("POSITION", obj + "");
+
 			selectItem(position);
+		}
+
+		public View getView(int position, View convertView, ViewGroup parent) {
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+			// View de renderização de cada item
+			View rowView = inflater.inflate(R.layout.drawer_list_item, parent, false);
+
+			// TextView para o titulo
+			TextView textView = (TextView) rowView.findViewById(R.id.lbl_home_resource);
+
+			// Objeto clicado
+			Resource data = this.getItem(position);
+			// Seta no TextView
+			textView.setText(data.getName());
+
+			return rowView;
+		}
+	}
+
+	private void findResources() {
+		listApapter.clear();
+		for (Resource data : getResourceDao().findAll()) {
+			listApapter.add(data);
 		}
 	}
 
@@ -114,7 +166,6 @@ public class HomeActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 		// update the main content by replacing fragments
 		Fragment fragment = new PlanetFragment();
 		Bundle args = new Bundle();
-		args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
 		fragment.setArguments(args);
 
 		FragmentManager fragmentManager = getFragmentManager();
@@ -122,7 +173,7 @@ public class HomeActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 
 		// update selected item and title, then close the drawer
 		mDrawerList.setItemChecked(position, true);
-		setTitle(mPlanetTitles[position]);
+		setTitle("");
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
@@ -154,7 +205,6 @@ public class HomeActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 	 * Fragment that appears in the "content_frame", shows a planet
 	 */
 	public static class PlanetFragment extends Fragment {
-		public static final String ARG_PLANET_NUMBER = "planet_number";
 
 		public PlanetFragment() {
 			// Empty constructor required for fragment subclasses
@@ -162,13 +212,8 @@ public class HomeActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_planet, container, false);
-			int i = getArguments().getInt(ARG_PLANET_NUMBER);
-			String planet = getResources().getStringArray(R.array.planets_array)[i];
+			View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-			int imageId = getResources().getIdentifier(planet.toLowerCase(Locale.getDefault()), "drawable", getActivity().getPackageName());
-			((ImageView) rootView.findViewById(R.id.image)).setImageResource(imageId);
-			getActivity().setTitle(planet);
 			return rootView;
 		}
 	}

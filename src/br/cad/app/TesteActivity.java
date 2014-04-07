@@ -1,8 +1,5 @@
 package br.cad.app;
 
-import java.io.File;
-import java.util.Vector;
-
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OrmLiteDao;
