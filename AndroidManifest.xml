@@ -29,10 +29,6 @@
             android:name="br.cad.app.HomeActivity_"
             android:label="@string/app_name"
             android:screenOrientation="landscape" />
-        <activity
-            android:name="br.cad.app.TesteActivity_"
-            android:label="@string/app_name"
-            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

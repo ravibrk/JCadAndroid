@@ -53,8 +53,6 @@ public class HomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		
-		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
-
 		for (Resource r : getResourceDao().findAll()) {
 			Log.i(LOG_NAME, r.getName());
 		}
@@ -96,16 +94,7 @@ public class HomeActivity extends Activity {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		if (savedInstanceState == null) {
-			selectItem(0);
-		}
-	}
-
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus) {
-		super.onWindowFocusChanged(hasFocus);
-		
-		if(hasFocus) {
-			getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
+			selectItem(0, null);
 		}
 	}
 
@@ -131,10 +120,23 @@ public class HomeActivity extends Activity {
 
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			Resource obj = getItem(position);
-			Log.i("POSITION", obj + "");
-
-			selectItem(position);
+			Resource resource = getItem(position);
+			
+			setTitle(resource.getName());
+			
+			Fragment frag = null;
+			try {
+				Class<?> obj = Class.forName("br.cad.app." + resource.getControllerActivity() + "_");
+				frag = (Fragment) obj.newInstance();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			
+			selectItem(position, frag);
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -162,9 +164,9 @@ public class HomeActivity extends Activity {
 		}
 	}
 
-	private void selectItem(int position) {
+	private void selectItem(int position, Fragment fragment) {
 		// update the main content by replacing fragments
-		Fragment fragment = new PlanetFragment();
+		fragment = fragment == null ? new HomeFragment() : fragment;
 		Bundle args = new Bundle();
 		fragment.setArguments(args);
 
@@ -173,7 +175,6 @@ public class HomeActivity extends Activity {
 
 		// update selected item and title, then close the drawer
 		mDrawerList.setItemChecked(position, true);
-		setTitle("");
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
@@ -199,22 +200,5 @@ public class HomeActivity extends Activity {
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
-	}
-
-	/**
-	 * Fragment that appears in the "content_frame", shows a planet
-	 */
-	public static class PlanetFragment extends Fragment {
-
-		public PlanetFragment() {
-			// Empty constructor required for fragment subclasses
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-
-			return rootView;
-		}
 	}
 }

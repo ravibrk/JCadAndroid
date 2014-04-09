@@ -16,9 +16,6 @@ public final class R {
         public static final int abc_slide_out_bottom=0x7f040004;
         public static final int abc_slide_out_top=0x7f040005;
     }
-    public static final class array {
-        public static final int planets_array=0x7f0c0000;
-    }
     public static final class attr {
         /**  Custom divider drawable to use for elements in the action bar. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -1006,7 +1003,7 @@ containing a value of this type.
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
-        public static final int button1=0x7f050040;
+        public static final int button1=0x7f050042;
         public static final int checkbox=0x7f05002d;
         public static final int collapseActionView=0x7f05000d;
         public static final int content_frame=0x7f05003d;
@@ -1021,11 +1018,11 @@ containing a value of this type.
         public static final int expanded_menu=0x7f05002c;
         public static final int home=0x7f050014;
         public static final int homeAsUp=0x7f050005;
-        public static final int home_lblName=0x7f050042;
+        public static final int home_lblName=0x7f050041;
         public static final int icon=0x7f05002a;
         public static final int ifRoom=0x7f05000a;
         public static final int image=0x7f050027;
-        public static final int lbl_home_resource=0x7f050041;
+        public static final int lbl_home_resource=0x7f050040;
         public static final int left_drawer=0x7f05003e;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050029;
@@ -1111,8 +1108,8 @@ containing a value of this type.
         public static final int abc_search_view=0x7f030016;
         public static final int activity_home=0x7f030017;
         public static final int activity_login=0x7f030018;
-        public static final int activity_teste=0x7f030019;
-        public static final int drawer_list_item=0x7f03001a;
+        public static final int drawer_list_item=0x7f030019;
+        public static final int fragment_chamada=0x7f03001a;
         public static final int fragment_home=0x7f03001b;
         public static final int support_simple_spinner_dropdown_item=0x7f03001c;
     }
@@ -1157,10 +1154,8 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
-        public static final int action_websearch=0x7f0a0015;
         public static final int activity_home=0x7f0a000e;
         public static final int app_name=0x7f0a000d;
-        public static final int app_not_available=0x7f0a0016;
         public static final int drawer_close=0x7f0a0014;
         public static final int drawer_open=0x7f0a0013;
         public static final int lbl_none=0x7f0a000f;
