@@ -1,5 +1,8 @@
 package br.cad.app;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.OrmLiteDao;
@@ -69,12 +72,13 @@ public class ChamadaFragment extends Fragment {
 	@Click(R.id.button1)
 	void onClick() {
 		progress = ProgressDialog.show(getActivity(), "dialog title", "dialog message", true);
-		
-		for(int i = 0; i <= 10000; i++) {
-			if(i == 1000) {
+
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() {
 				progress.dismiss();
-				break;
 			}
-		}
+		}, 5 * 1000);
 	}
 }
