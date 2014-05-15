@@ -9,7 +9,10 @@ import org.androidannotations.annotations.OrmLiteDao;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +74,19 @@ public class ChamadaFragment extends Fragment {
 
 	@Click(R.id.button1)
 	void onClick() {
-		progress = ProgressDialog.show(getActivity(), "dialog title", "dialog message", true);
+		boolean conectado;
+		ConnectivityManager conectivtyManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+		if (conectivtyManager.getActiveNetworkInfo() != null
+				&& conectivtyManager.getActiveNetworkInfo().isAvailable()
+				&& conectivtyManager.getActiveNetworkInfo().isConnected()) {
+			conectado = true;
+		} else {
+			conectado = false;
+		}
+		
+		Log.i(LOG_NAME, String.valueOf(conectado));
+		
+		progress = ProgressDialog.show(getActivity(), "dialog title", String.valueOf(conectado), true);
 
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
